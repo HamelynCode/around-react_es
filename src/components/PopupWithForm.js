@@ -1,11 +1,10 @@
-//import Popup from "./Popup.js";
-
 export default function PopupWithForm(props) {
   const containerClass = `form__body ${props.containerClass}`;
+  const fromClass = `form popup ${props.isOpen ? '':'popup_hidden'}`;
   return (
-    <form className="form popup popup_hidden" id={props.id}>
+    <form className={fromClass} id={props.id}>
       <div className={containerClass}>
-        <button className="btn btn_close form__btn-close" type="button"></button>
+        <button className="btn btn_close form__btn-close" type="button" onClick={props.onClose}></button>
         <h2 className="form__title">{props.title}</h2>
 
         {props.children}
@@ -17,50 +16,3 @@ export default function PopupWithForm(props) {
     </form>
   );
 }
-
-/*
-export default class PopupWithForm extends Popup {
-  constructor({ popupSelector }, info, submitCallback) {
-    super({ popupSelector }, info);
-
-    this._inputList = Array.from(
-      this._elem.querySelectorAll(info.inputSelector)
-    );
-
-    this._btnSubmit = this._elem.querySelector(info.btnSubmitSelector);
-
-    this._submitExternalCallback = submitCallback;
-    this.setEventListeners();
-  }
-
-  close() {
-    super.close();
-    this._elem.reset();
-  }
-
-  setEventListeners() {
-    this._elem.addEventListener("submit", this._submitInternalCallback);
-    super.setEventListeners();
-  }
-
-  _submitInternalCallback = (evt) => {
-    this._submitExternalCallback(evt);
-  };
-
-  getInputValues() {
-    const values = {};
-    this._inputList.forEach((input) => (values[input.name] = input.value));
-    return values;
-  }
-
-  setInputValues(data) {
-    this._inputList.forEach((input) => {
-      input.value = data[input.name];
-    });
-  }
-
-  setSubmitButtonText(text) {
-    this._btnSubmit.textContent = text;
-  }
-}
-*/

@@ -1,21 +1,32 @@
-export default function Main() {
-  function handleEditAvatarClick(){
-    document.querySelector('#form-profile-img').classList.remove("popup_hidden");
-  }
-  function handleEditProfileClick(){
-    document.querySelector('#form-edit').classList.remove("popup_hidden");
-  }
-  function handleAddPlaceClick(){
-    document.querySelector('#form-add').classList.remove("popup_hidden");
-  }
+import { useEffect, useState } from "react";
+import api from "../utils/Api";
+import Card from "./Card";
+
+export default function Main(props) {
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+  const [cards, setCards] = useState([]);
+
+  useEffect(()=>{
+    api.getUserInfo().then((info)=>{
+      setUserName(info.name);
+      setUserDescription(info.about);
+      setUserAvatar(info.avatar);
+    });
+    api.getInitialCards().then((cards)=>{
+      setCards(cards);
+    });
+
+  }, []);
 
   return (
     <>
       <section className="profile">
-        <div onClick={handleEditAvatarClick}>
+        <div onClick={props.onEditAvatarClick}>
           <img
             className="profile__avatar"
-            src=""//"<%=require('./images/avatar.jpg')%>"
+            src={userAvatar}
             alt="Imágen de perfil del usuario"
           />
           <div className="profile__edit-cover"></div>
@@ -23,16 +34,21 @@ export default function Main() {
 
         <div className="profile__info">
           <div className="profile__data">
-            <h2 className="profile__name"></h2>
-            <button className="btn btn_edit" onClick={handleEditProfileClick}></button>
+            <h2 className="profile__name">{userName}</h2>
+            <button className="btn btn_edit" onClick={props.onEditProfileClick}></button>
           </div>
-          <p className="profile__about"></p>
+          <p className="profile__about">{userDescription}</p>
         </div>
 
-        <button className="btn btn_add profile__btn" onClick={handleAddPlaceClick}></button>
+        <button className="btn btn_add profile__btn" onClick={props.onAddPlaceClick}></button>
       </section>
 
-      <section className="elements"></section>
+      <section className="elements">
+        {cards.map(card =>(
+          <Card key={card._id} card={card} onCardClick={props.onCardClick} />
+          )
+        )}
+      </section>
     </>
   );
 }
