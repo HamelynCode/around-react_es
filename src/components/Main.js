@@ -9,14 +9,23 @@ export default function Main(props) {
   const [cards, setCards] = useState([]);
 
   useEffect(()=>{
-    api.getUserInfo().then((info)=>{
+    api.getUserInfo()
+    .then((info)=>{
       setUserName(info.name);
       setUserDescription(info.about);
       setUserAvatar(info.avatar);
-    }).then(()=>{
-      api.getInitialCards().then((cards)=>{
+    })
+    .then(()=>{
+      api.getInitialCards()
+      .then((cards)=>{
         setCards(cards);
+      })
+      .catch((err) => {
+        console.log(err);
       });
+    })
+    .catch((err) => {
+      console.log(err);
     });
 
   }, []);
