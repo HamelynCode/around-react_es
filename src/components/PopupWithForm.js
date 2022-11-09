@@ -1,16 +1,16 @@
-export default function PopupWithForm(props) {
-  const containerClass = `form__body ${props.containerClass}`;
-  const fromClass = `form popup ${props.isOpen ? '':'popup_hidden'}`;
+export default function PopupWithForm({id, title, isOpen, onClose, containerClass, submitText, children}) {
+  const containerFinalClass = `form__body ${containerClass}`;
+  const fromClass = `form popup ${isOpen ? '':'popup_hidden'}`;
   return (
-    <form className={fromClass} id={props.id}>
-      <div className={containerClass}>
-        <button className="btn btn_close form__btn-close" type="button" onClick={props.onClose}></button>
-        <h2 className="form__title">{props.title}</h2>
+    <form className={fromClass} id={id}>
+      <div className={containerFinalClass}>
+        <button className="btn btn_close form__btn-close" type="button" onClick={onClose}></button>
+        <h2 className="form__title">{title}</h2>
 
-        {props.children}
+        {children}
 
         <button type="submit" className="btn btn_submit form__btn-submit">
-          {props.submitText}
+          {submitText}
         </button>
       </div>
     </form>
