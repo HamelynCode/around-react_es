@@ -22,6 +22,9 @@
 /*---- page ----*/
 @import url("./blocks/page/page.css");
 
+/*---- page ----*/
+@import url('./blocks/main/main.css');
+
 /*---- view ----*/
 @import url("./blocks/view/view.css");
 

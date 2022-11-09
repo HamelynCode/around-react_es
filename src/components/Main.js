@@ -22,7 +22,7 @@ export default function Main(props) {
   }, []);
 
   return (
-    <>
+    <main className="main">
       <section className="profile">
         <div onClick={props.onEditAvatarClick}>
           <img
@@ -50,6 +50,6 @@ export default function Main(props) {
           )
         )}
       </section>
-    </>
+    </main>
   );
 }
