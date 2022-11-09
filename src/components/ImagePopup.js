@@ -1,4 +1,4 @@
-export default function PopupWithImage(props) {
+export default function ImagePopup(props) {
   const popupClass = `view popup ${props.isOpen? '':'popup_hidden'}`;
 
   return (

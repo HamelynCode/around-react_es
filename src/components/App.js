@@ -1,4 +1,4 @@
-import PopupWithImage from './PopupWithImage';
+import ImagePopup from './ImagePopup';
 import PopupWithForm from './PopupWithForm';
 import Header from './Header';
 import Main from './Main';
@@ -37,7 +37,7 @@ function App() {
 
   return (
     <div className="page">
-      <PopupWithImage selectedCard={selectedCard} isOpen={isImagePopupOpen} onClose={closeAllPopups} />
+      <ImagePopup selectedCard={selectedCard} isOpen={isImagePopupOpen} onClose={closeAllPopups} />
 
       <PopupWithForm id='form-delete' title='Estas seguro/a ?' isOpen={false} onClose={closeAllPopups} containerClass='form__body_confirm' submitText='Sí' />
       
