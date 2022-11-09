@@ -13,9 +13,10 @@ export default function Main(props) {
       setUserName(info.name);
       setUserDescription(info.about);
       setUserAvatar(info.avatar);
-    });
-    api.getInitialCards().then((cards)=>{
-      setCards(cards);
+    }).then(()=>{
+      api.getInitialCards().then((cards)=>{
+        setCards(cards);
+      });
     });
 
   }, []);

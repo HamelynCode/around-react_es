@@ -1,10 +1,8 @@
-import { useState } from "react";
-
 export default function Card(props){
   const card = props.card;
 
   function handleClick() {
-    props.onCardClick(props.card);
+    props.onCardClick(card);
   }
 
   return(
