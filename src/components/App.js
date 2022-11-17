@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -56,7 +57,16 @@ function App() {
     .catch((err) => {
       console.log(err);
     });
+    closeAllPopups();
+  }
 
+  function handleUpdateAvatar(data) {
+    api.setProfileImage(data.avatar).then((info)=>{
+      setCurrentUser(info);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
     closeAllPopups();
   }
 
@@ -67,12 +77,7 @@ function App() {
 
       <PopupWithForm id='form-delete' title='Estas seguro/a ?' isOpen={false} onClose={closeAllPopups} containerClass='form__body_confirm' submitText='Sí' />
       
-      <PopupWithForm id='form-profile-img' title='Cambiar foto de perfil' isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} containerClass='form__body_avatar' submitText='Guardar'>
-        <div className="form__input-container">
-          <input name="text" type="url" className="input form__text" id="profile-img-input-text" placeholder="Link" required />
-          <span className="form__error"             id="profile-img-input-text-error"></span>
-        </div>
-      </PopupWithForm>
+      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
 
       <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
 
