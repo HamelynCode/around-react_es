@@ -6,6 +6,7 @@ import Footer from './Footer';
 import { useEffect, useState } from 'react';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import EditProfilePopup from './EditProfilePopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -48,6 +49,17 @@ function App() {
     setSelectedCard(card);
   }
 
+  function handleUpdateUser(user) {
+    api.editProfile(user.name, user.about).then((info)=>{
+      setCurrentUser(info);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+    closeAllPopups();
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
@@ -62,17 +74,7 @@ function App() {
         </div>
       </PopupWithForm>
 
-      <PopupWithForm id='form-edit' title='Editar perfil' isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} submitText='Guardar'>
-        <div className="form__input-container">
-          <input name="name" type="text" className="input form__name" id="edit-input-name" placeholder="Nombre" required minLength="2" maxLength="40" />
-          <span className="form__error"             id="edit-input-name-error"></span>
-        </div>
-
-        <div className="form__input-container">
-          <input name="text" type="text" className="input form__text" id="edit-input-text" placeholder="Acerca de mi" required minLength="2" maxLength="200" />
-          <span className="form__error"             id="edit-input-text-error"></span>
-        </div>
-      </PopupWithForm>
+      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
 
       <PopupWithForm id='form-add' title='Crear tarjeta nueva' isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} submitText='Guardar'>
         <div className="form__input-container">
