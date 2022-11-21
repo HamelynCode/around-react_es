@@ -1,13 +1,13 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-export default function AddPlacePopup(props) {
+export default function AddPlacePopup({isOpen, onClose, onAddPlace}) {
   const nameRef = React.useRef();
   const urlRef = React.useRef();
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onAddPlace({
+    onAddPlace({
       name: nameRef.current.value,
       url: urlRef.current.value
     });
@@ -17,8 +17,8 @@ export default function AddPlacePopup(props) {
     <PopupWithForm
       id="form-add"
       title="Crear tarjeta nueva"
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      onClose={onClose}
       onSubmit={handleSubmit}
       submitText="Guardar"
     >
