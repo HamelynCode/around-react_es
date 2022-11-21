@@ -8,6 +8,7 @@ import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -17,15 +18,53 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
 
+  const [cards, setCards] = useState([]);
+
   useEffect(()=>{
     api.getUserInfo()
     .then((info)=>{
       setCurrentUser(info);
+      api.getInitialCards()
+      .then((cards)=>{
+        setCards(cards);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     })
     .catch((err) => {
       console.log(err);
     });
   }, []);
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    
+    if(isLiked){
+      api.removeLike(card._id).then((newCard)=>{
+        setCards(cards.map(c => c._id === card._id ? newCard : c));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    } else {
+      api.addNewLike(card._id).then((newCard)=>{
+        setCards(cards.map(c => c._id === card._id ? newCard : c));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card._id).then((newCard)=>{
+      setCards(cards.filter(c => c._id !== card._id));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 
   function handleEditAvatarClick(){
     setIsEditAvatarPopupOpen(true);
@@ -70,6 +109,16 @@ function App() {
     closeAllPopups();
   }
 
+  function handleAddPlaceSubmit(place) {
+    api.addNewCard(place.name, place.url).then((newCard)=>{
+      setCards([newCard, ...cards]);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    closeAllPopups();
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
@@ -81,21 +130,11 @@ function App() {
 
       <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
 
-      <PopupWithForm id='form-add' title='Crear tarjeta nueva' isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} submitText='Guardar'>
-        <div className="form__input-container">
-          <input name="name" type="text" className="input form__name" id="add-input-name" placeholder="Nombre" required minLength="2" maxLength="30" />
-          <span className="form__error"             id="add-input-name-error"></span>
-        </div>
-
-        <div className="form__input-container">
-          <input name="text" type="url" className="input form__text" id="add-input-text" placeholder="Link" required />
-          <span className="form__error"             id="add-input-text-error"></span>
-        </div>
-      </PopupWithForm>
+      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
 
       <Header />
 
-      <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onCardClick={handleCardClick} />
+      <Main onEditProfileClick={handleEditProfileClick} onAddPlaceClick={handleAddPlaceClick} onEditAvatarClick={handleEditAvatarClick} onCardClick={handleCardClick} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
 
       <Footer />
     </div>
